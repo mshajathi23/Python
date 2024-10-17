@@ -1,0 +1,156 @@
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.courses = {}
+
+    def add_course(self, course, marks):
+        self.courses[course] = marks
+
+    def update_course(self, course, marks):
+        if course in self.courses:
+            self.courses[course] = marks
+        else:
+            print(f"Course {course} not found!")
+
+    def delete_course(self, course):
+        if course in self.courses:
+            del self.courses[course]
+        else:
+            print(f"Course {course} not found!")
+
+    def calculate_average(self):
+        if self.courses:
+            return sum(self.courses.values()) / len(self.courses)
+        return 0
+
+    def calculate_cgpa(self):
+        if self.courses:
+            total_points = 0
+            for marks in self.courses.values():
+                if marks >= 90:
+                    total_points += 10.0
+                elif marks >= 80:
+                    total_points += 8.0
+                elif marks >= 70:
+                    total_points += 7.0
+                elif marks >= 60:
+                    total_points += 6.0
+                elif marks >= 50:
+                    total_points += 5.0
+                elif marks >= 40:
+                    total_points += 4.0
+                elif marks >= 30:
+                    total_points += 3.0
+                elif marks >= 20:
+                    total_points += 2.0
+                else:
+                    total_points += 1.0
+            return total_points / len(self.courses)
+        return 0
+
+    def calculate_grade(self):
+        if self.courses:
+            average = self.calculate_average()
+            if average >= 90:
+                return 'A'
+            elif average >= 80:
+                return 'B'
+            elif average >= 70:
+                return 'C'
+            elif average >= 60:
+                return 'D'
+            else:
+                return 'F'
+        return 'N/A'
+
+    def is_eligible_for_placement(self):
+        return self.calculate_cgpa() >= 3.0
+
+    def display_student_info(self):
+        print(f"Student Name: {self.name}")
+        print(f"Courses and Marks: {self.courses}")
+        print(f"Average Marks: {self.calculate_average():.2f}")
+        print(f"CGPA: {self.calculate_cgpa():.2f}")
+        print(f"Grade: {self.calculate_grade()}")
+        print(f"Eligibility for Placement: {'Eligible' if self.is_eligible_for_placement() else 'Not Eligible'}")
+
+
+class StudentGradeTracker:
+    def __init__(self):
+        self.students = {}
+
+    def add_student(self, name):
+        if name not in self.students:
+            self.students[name] = Student(name)
+        else:
+            print(f"Student {name} already exists!")
+
+    def get_student(self, name):
+        if name in self.students:
+            return self.students[name]
+        else:
+            print(f"Student {name} not found!")
+            return None
+
+    def delete_student(self, name):
+        if name in self.students:
+            del self.students[name]
+        else:
+            print(f"Student {name} not found!")
+
+    def display_all_students(self):
+        for student in self.students.values():
+            student.display_student_info()
+            print("-" * 30)
+
+
+def main():
+    tracker = StudentGradeTracker()
+
+    while True:
+        try:
+            print("\n1. Add Student\n2. Add/Update Course Marks\n3. Delete Course\n4. Display Student Info\n5. Delete Student\n6. Display All Students\n7. Exit")
+            choice = int(input("Enter your choice: "))
+
+            if choice == 1:
+                name = input("Enter student name: ")
+                tracker.add_student(name)
+
+            elif choice == 2:
+                name = input("Enter student name: ")
+                student = tracker.get_student(name)
+                if student:
+                    course = input("Enter course name: ")
+                    marks = float(input("Enter marks: "))
+                    student.add_course(course, marks)
+
+            elif choice == 3:
+                name = input("Enter student name: ")
+                student = tracker.get_student(name)
+                if student:
+                    course = input("Enter course name: ")
+                    student.delete_course(course)
+
+            elif choice == 4:
+                name = input("Enter student name: ")
+                student = tracker.get_student(name)
+                if student:
+                    student.display_student_info()
+
+            elif choice == 5:
+                name = input("Enter student name: ")
+                tracker.delete_student(name)
+
+            elif choice == 6:
+                tracker.display_all_students()
+
+            elif choice == 7:
+                break
+
+            else:
+                print("Invalid choice! Please try again.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
